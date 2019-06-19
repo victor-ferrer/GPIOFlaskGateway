@@ -1,6 +1,5 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import RPi.GPIO as GPIO
-
 
 GPIO.setmode(GPIO.BCM)
 
@@ -11,19 +10,13 @@ app = Flask(__name__)
 def getPinStatus(pin):
     try:
        GPIO.setup(int(pin), GPIO.IN)
-       if GPIO.input(int(pin)) == True:
-          response = "Pin number " + pin + " is high!"
-       else:
-          response = "Pin number " + pin + " is low!"
+       status = GPIO.input(int(pin))
     except:
-       response = "There was an error reading pin " + pin + "."
+       status = -1
 
-    templateData = {
-       'pin' :  pin,
-       'response' : response
-       }
+    data = {'pin' :  pin, 'status' : response }
 
-    return jsonify(templateData), 200
+    return jsonify(data), 200
 
 # Get all pins statuses
 @app.route('/pin', methods=['GET'])
@@ -45,9 +38,7 @@ def setPinStatus(pin):
        GPIO.setup(int(pin), GPIO.OUT)
        GPIO.output(int(pin), not status)
 
-       data = {
-          'pin' :  pin,
-          'status' : not status
+       data = {'pin' :  pin, 'status' : not status
        }
 
     except:
