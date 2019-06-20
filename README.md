@@ -20,9 +20,11 @@ flask run -h 0.0.0.0 -p 5000
 ```
 
 # Available enpoints
-GET /pin : Get a JSON will all the pins (up to 20) statuses
-GET /pin/[pin id]: Get a JSON with the status of a specific pin
-GET /pin/[pin id]/[0|1] Activate or deactivate a pin given its id
+GET /pin : Get a JSON will all the pins (up to 20) statuses.
+
+GET /pin/[pin id]: Get a JSON with the status of a specific pin.
+
+GET /pin/[pin id]/[0|1] Activate or deactivate a pin given its id.
 
 
 
