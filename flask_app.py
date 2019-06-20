@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import RPi.GPIO as GPIO
+import sys
 
 GPIO.setmode(GPIO.BCM)
 
@@ -14,7 +15,7 @@ def getPinStatus(pin):
     except:
        status = -1
 
-    data = {'pin' :  pin, 'status' : response }
+    data = {'pin' :  pin, 'status' : status }
 
     return jsonify(data), 200
 
@@ -30,19 +31,16 @@ def getAllPinStatuses():
     return jsonify(data), 200
 
 # Modify (negate) the status of a pin, given its ID
-@app.route('/pin/<pin>', methods=['POST'])
-def setPinStatus(pin):
+@app.route('/pin/<pin>/<status>', methods=['GET'])
+def setPinStatus(pin, status):
     try:
-       GPIO.setup(int(pin), GPIO.IN)
-       status = GPIO.input(int(pin))
        GPIO.setup(int(pin), GPIO.OUT)
-       GPIO.output(int(pin), not status)
+       GPIO.output(int(pin), int(status))
 
-       data = {'pin' :  pin, 'status' : not status
-       }
+       data = {'pin' :  pin, 'status' :  status }
 
     except:
-       return jsonify('Error'), 500
+       return jsonify('Error:' + str(sys.exc_info()[0]) ), 500
     
     return jsonify(data), 200
 
